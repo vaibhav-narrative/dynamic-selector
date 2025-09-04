@@ -24,10 +24,19 @@
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s;
+            user-select: none;
+            display: inline-block;
+            text-align: center;
+            outline: none;
         }
 
         .clickable-element:hover {
             background-color: #0056b3;
+        }
+
+        .clickable-element:focus {
+            outline: 2px solid #0056b3;
+            outline-offset: 2px;
         }
 
         .modal {
@@ -67,7 +76,7 @@
 </head>
 <body>
     <div id="container">
-        <button class="clickable-element">Click me to open modal</button>
+        <div class="clickable-element">Click me to open modal</div>
     </div>
 
     <div id="myModal" class="modal">
@@ -88,11 +97,14 @@
             // Get the clickable element
             const clickableElement = document.querySelector('.clickable-element');
 
-            // Remove existing dynamic attributes
+            // Remove existing dynamic attributes (avoid any aria or role attributes)
             clickableElement.removeAttribute('id');
+            clickableElement.removeAttribute('role');
+            clickableElement.removeAttribute('aria-label');
+            clickableElement.removeAttribute('aria-describedby');
             clickableElement.className = 'clickable-element';
 
-            // Add dynamic attributes
+            // Add dynamic attributes (no semantic roles or aria attributes)
             clickableElement.id = randomId;
             clickableElement.classList.add(randomClass);
 
@@ -120,9 +132,11 @@
             modal.style.display = 'none';
         }
 
-        // Add event listener to the clickable element
-        function attachClickListener() {
-            const clickableElement = document.querySelector('.clickable-element');
+        // Add event listener to the clickable element (no semantic roles or aria attributes)
+        function attachClickListener(element = null) {
+            const clickableElement = element || document.querySelector('.clickable-element');
+
+            // Handle mouse click only (no keyboard handling to avoid detection)
             clickableElement.addEventListener('click', openModal);
         }
 
@@ -163,9 +177,11 @@
 
         regenerateBtn.addEventListener('click', function() {
             const clickableElement = document.querySelector('.clickable-element');
-            clickableElement.removeEventListener('click', openModal);
+            // Remove all event listeners before regenerating by cloning
+            const newClickableElement = clickableElement.cloneNode(true);
+            clickableElement.parentNode.replaceChild(newClickableElement, clickableElement);
             currentSelector = generateDynamicSelector();
-            attachClickListener();
+            attachClickListener(newClickableElement);
         });
 
         document.getElementById('container').appendChild(regenerateBtn);
