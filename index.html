@@ -39,6 +39,22 @@
             outline-offset: 2px;
         }
 
+        .clickable-element {
+            position: relative;
+            min-width: 150px;
+            min-height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .clickable-element::before {
+            content: "→";
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -76,14 +92,14 @@
 </head>
 <body>
     <div id="container">
-        <div class="clickable-element">Click me to open modal</div>
+        <span class="clickable-element"></span>
     </div>
 
     <div id="myModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Modal Opened!</h2>
-            <p>This modal was opened by clicking the dynamic element.</p>
+            <p>This modal was opened by clicking the dynamic element with arrow (→).</p>
             <p>Dynamic Selector: <span id="dynamic-selector-display"></span></p>
         </div>
     </div>
@@ -102,6 +118,7 @@
             clickableElement.removeAttribute('role');
             clickableElement.removeAttribute('aria-label');
             clickableElement.removeAttribute('aria-describedby');
+            clickableElement.removeAttribute('aria-hidden');
             clickableElement.className = 'clickable-element';
 
             // Add dynamic attributes (no semantic roles or aria attributes)
